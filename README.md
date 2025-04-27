@@ -28,8 +28,8 @@
 - 自动发版可能会打进去新的bug(类似于docker版自动升级dev拉取)
 - 因此推荐找对应原项目最新Releases的版本
 - 如 原项目最新版本1.9.7 在commit为0fb12c7的地方进行的打包
-  ![image](https://github.com/developer-wlj/Windows-MoviePilot/assets/55836679/d0c5f884-9e0d-46a3-9044-0327903eddfb)
-  ![image](https://github.com/developer-wlj/Windows-MoviePilot/assets/55836679/53591f14-94aa-4cda-968c-c23bf97fe0ae)
+  ![image](https://github.com/fortunearterial/NasPilot-Windows/assets/55836679/d0c5f884-9e0d-46a3-9044-0327903eddfb)
+  ![image](https://github.com/fortunearterial/NasPilot-Windows/assets/55836679/53591f14-94aa-4cda-968c-c23bf97fe0ae)
 - 那就在本项目找后缀为0fb12c7发行的版本,如果找不到就向上找离0fb12c7最近的提交
   
 ### 如何运行
@@ -49,7 +49,7 @@ Windows-MoviePilot-V2默认使用3333(前端)和3111端口(后端)
 
  ### 关于登录页面提示502问题
 - 如果你看到托盘栏中的MP图标未退出(需要把鼠标放到托盘栏MP图标上,Windows会自动刷新托盘栏),说明MP还未启动完成  
-- 没有托盘图标就代表启动失败  手动cmd方式启动后端查看错误 详情看上述 [关于win托盘图标自动退出问题](https://github.com/developer-wlj/Windows-MoviePilot/tree/v2?tab=readme-ov-file#%E5%85%B3%E4%BA%8Ewin%E6%89%98%E7%9B%98%E5%9B%BE%E6%A0%87%E8%87%AA%E5%8A%A8%E9%80%80%E5%87%BA%E9%97%AE%E9%A2%98)
+- 没有托盘图标就代表启动失败  手动cmd方式启动后端查看错误 详情看上述 [关于win托盘图标自动退出问题](https://github.com/fortunearterial/NasPilot-Windows/tree/v2?tab=readme-ov-file#%E5%85%B3%E4%BA%8Ewin%E6%89%98%E7%9B%98%E5%9B%BE%E6%A0%87%E8%87%AA%E5%8A%A8%E9%80%80%E5%87%BA%E9%97%AE%E9%A2%98)
 
 ### 关于看不到网络挂载的盘符问题
 - 程序默认安装目录是系统盘的Program Files (x86), 如果在此目录下 运行MP, 需管理员模式,所以Windows-MoviePilot-V2默认申请以管理员身份运行

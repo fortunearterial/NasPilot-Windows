@@ -17,13 +17,13 @@ jobs:
       - name: 版本对比
         run: |
           # 发送GET请求
-          $response = Invoke-WebRequest -Uri https://api.github.com/repos/developer-wlj/MoviePilot/git/refs/heads/wlj0807 | ConvertFrom-Json
+          $response = Invoke-WebRequest -Uri https://api.github.com/repos/fortunearterial/NasPilot-Windows/git/refs/heads/wlj0807 | ConvertFrom-Json
           echo $response.object.sha
           $latest_commit_sha = $response.object.sha
           echo $latest_commit_sha
           echo 555
           # 获取倒数第二次提交的hash
-          $response1 = Invoke-WebRequest -Uri "https://api.github.com/repos/developer-wlj/MoviePilot/git/commits/$latest_commit_sha" | ConvertFrom-Json
+          $response1 = Invoke-WebRequest -Uri "https://api.github.com/repos/fortunearterial/NasPilot-Windows/git/commits/$latest_commit_sha" | ConvertFrom-Json
           $newArray = [System.Collections.ArrayList]::new()
           # 遍历数组中的每个对象
           foreach ($item in $response1.parents) {
@@ -32,11 +32,11 @@ jobs:
             # 将sha属性值添加到新数组中
             $newArray.Add($sha)
           }
-          $response = Invoke-WebRequest -Uri https://api.github.com/repos/jxxghp/MoviePilot/git/refs/heads/main | ConvertFrom-Json
+          $response = Invoke-WebRequest -Uri https://api.github.com/repos/fortunearterial/NasPilot-Backend/git/refs/heads/main | ConvertFrom-Json
           $jxxghp_version=$response.object.sha
           echo $jxxghp_version
           if ($newArray -contains $jxxghp_version) {
-           $response2 = Invoke-WebRequest -Uri https://api.github.com/repos/developer-wlj/Windows-MoviePilot/releases/latest | ConvertFrom-Json
+           $response2 = Invoke-WebRequest -Uri https://api.github.com/repos/fortunearterial/NasPilot-Windows/releases/latest | ConvertFrom-Json
            # 提取tag_name的值
            $tagName = $response2.tag_name
            echo $tagName
@@ -48,7 +48,7 @@ jobs:
              Write-Output "检测到新的commit 执行重新打包"
            }
           } else {
-           Write-Output "developer-wlj/MoviePilot需要手动同步上游仓库"
+           Write-Output "fortunearterial/NasPilot-Windows需要手动同步上游仓库"
            exit 1
           }
 
@@ -59,15 +59,15 @@ jobs:
           ref: main
           repository: ${{ secrets.REPO }}
           ssh-key: ${{ secrets.DEPLOY_KEY }}
-          path: 'Inno-Setup-MoviePilot'
+          path: 'Inno-Setup-NasPilot'
           fetch-depth: 2
 
       - name: 拉取后端代码
         uses: actions/checkout@v2
         with:
-          ref: wlj0807
-          repository: developer-wlj/MoviePilot
-          path: 'MoviePilot'
+          ref: v2-develope
+          repository: fortunearterial/NasPilot-Windows
+          path: 'NasPilot'
           fetch-depth: 2
 
       - name: Init Python 3.11.4
@@ -75,15 +75,15 @@ jobs:
         with:
           python-version: '3.11.4'
           cache: 'pip'
-          run: cd MoviePilot
+          run: cd NasPilot
 
       - name: Install dependent packages
         run: |
-          cd MoviePilot
+          cd NasPilot
           dir
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          # $src_hash=git ls-remote -h https://github.com/jxxghp/MoviePilot.git
+          # $src_hash=git ls-remote -h https://github.com/fortunearterial/NasPilot-Backend.git
           # $hash=git log -1 --pretty=%H
           # $hash_version=$src_hash.Substring(0, 7)
           $hash_version=(git log -2 --pretty=format:"%h" | Select-Object -Skip 1)
@@ -119,16 +119,16 @@ jobs:
           # Remove-Item -Path "MoviePilot-Plugins-main" -Recurse -Force
           Get-ChildItem -Path . -Recurse -Filter "requirements.txt" | ForEach-Object { pip install -r $_ }
 
-      - name: Download MoviePilot Frontend
+      - name: Download NasPilot Frontend
         run: |
-          mkdir MoviePilot-Frontend
-          cd MoviePilot-Frontend
+          mkdir NasPilot-Frontend
+          cd NasPilot-Frontend
           # 测试用
           # New-Item -Path . -Name "newfile.txt" -ItemType File
           # 用于获取后端主版本号
-          $response = Invoke-WebRequest -Uri https://api.github.com/repos/jxxghp/MoviePilot/releases/latest | ConvertFrom-Json
+          $response = Invoke-WebRequest -Uri https://api.github.com/repos/fortunearterial/NasPilot-Backend/releases/latest | ConvertFrom-Json
           # 前端打包后的下载地址
-          $extract_release = Invoke-WebRequest https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases/latest | ConvertFrom-Json
+          $extract_release = Invoke-WebRequest https://api.github.com/repos/fortunearterial/NasPilot-Frontend/releases/latest | ConvertFrom-Json
           $extract_assets = $extract_release.assets
           $extract_url = ""
           Write-Host "Download zip"
@@ -189,7 +189,7 @@ jobs:
           # git clone https://github.com/developer-wlj/Inno-Setup-MoviePilot.git
           Invoke-WebRequest https://jrsoftware.org/download.php/is.exe?site=1 -OutFile is.exe
           Start-Process is.exe -ArgumentList "/VERYSILENT", "/NORETART", "/SP-","/SUPPRESSMSGBOXES","/DIR=C:\Users\runneradmin\AppData\Local\Temp\inno" -NoNewWindow -Wait
-          cd Inno-Setup-MoviePilot
+          cd Inno-Setup-NasPilot
           Copy-Item -Path ".\ChineseSimplified.isl" -Destination "C:\Users\runneradmin\AppData\Local\Temp\inno\Languages"
           echo $env:FIRST_VERSION
           echo $env:HASH_VERSION
