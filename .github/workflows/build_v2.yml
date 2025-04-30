@@ -57,6 +57,14 @@ jobs:
           path: 'NasPilot'
           fetch-depth: 2
 
+      - name: pull config code
+        uses: actions/checkout@v4
+        with:
+          ref: v2-develope
+          repository: fortunearterial/NasPilot-Windows
+          path: 'NasPilot-Agent'
+          fetch-depth: 2
+
       - name: Init Python 3.12.8
         uses: actions/setup-python@v5
         with:
@@ -69,7 +77,8 @@ jobs:
           cd NasPilot
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          # Remove-Item ".\config\app.env"
+          Remove-Item ".\config\app.env"
+          Copy-Item "..\NasPilot-Windows\config\app.env" ".\config\app.env"
           $hash_version=(git log -2 --pretty=format:"%h" | Select-Object -Skip 1)
           $GIT_LOG=(git log -2 --oneline | Select-Object -Last 1)
           echo $GIT_LOG
