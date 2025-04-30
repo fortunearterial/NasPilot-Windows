@@ -60,7 +60,7 @@ jobs:
       - name: pull config code
         uses: actions/checkout@v4
         with:
-          ref: v2-develope
+          ref: main
           repository: fortunearterial/NasPilot-Windows
           path: 'NasPilot-Agent'
           fetch-depth: 2
