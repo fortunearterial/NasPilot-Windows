@@ -16,7 +16,7 @@ jobs:
       - name: 版本对比
         run: |
           # 发送GET请求
-          $response = Invoke-WebRequest -Uri https://api.github.com/repos/fortunearterial/NasPilot-Windows/git/refs/heads/v2-develpoe | ConvertFrom-Json
+          $response = Invoke-WebRequest -Uri https://api.github.com/repos/fortunearterial/NasPilot-Windows/git/refs/heads/main | ConvertFrom-Json
           # echo $response.object.sha
           $latest_commit_sha = $response.object.sha
           echo $latest_commit_sha
