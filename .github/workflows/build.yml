@@ -17,7 +17,7 @@ jobs:
       - name: 版本对比
         run: |
           # 发送GET请求
-          $response = Invoke-WebRequest -Uri https://api.github.com/repos/fortunearterial/NasPilot-Windows/git/refs/heads/wlj0807 | ConvertFrom-Json
+          $response = Invoke-WebRequest -Uri https://api.github.com/repos/fortunearterial/NasPilot-Windows/git/refs/heads/main | ConvertFrom-Json
           echo $response.object.sha
           $latest_commit_sha = $response.object.sha
           echo $latest_commit_sha
@@ -32,7 +32,7 @@ jobs:
             # 将sha属性值添加到新数组中
             $newArray.Add($sha)
           }
-          $response = Invoke-WebRequest -Uri https://api.github.com/repos/fortunearterial/NasPilot-Backend/git/refs/heads/main | ConvertFrom-Json
+          $response = Invoke-WebRequest -Uri https://api.github.com/repos/fortunearterial/NasPilot-Backend/git/refs/heads/v2-develope | ConvertFrom-Json
           $jxxghp_version=$response.object.sha
           echo $jxxghp_version
           if ($newArray -contains $jxxghp_version) {
@@ -91,7 +91,7 @@ jobs:
           echo "HASH_VERSION=$hash_version" >> $env:GITHUB_ENV
           echo $HASH_VERSION
           cat $env:GITHUB_ENV
-          cd app/helper
+          cd app/resources
           $extract_url = "https://raw.githubusercontent.com/jxxghp/MoviePilot-Resources/main/resources/sites.cp311-win_amd64.pyd"
           Invoke-WebRequest -URI $extract_url -OutFile "sites.cp311-win_amd64.pyd"
           $extract_url1 = "https://raw.githubusercontent.com/jxxghp/MoviePilot-Resources/main/resources/user.sites.bin"
