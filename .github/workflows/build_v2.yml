@@ -5,7 +5,6 @@ on:
     - cron: '0 0/4 * * *'
 env:
   REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
-  REPO: ${{ secrets.REPO }}
 
 jobs:
   Windows-build:
@@ -32,7 +31,7 @@ jobs:
             # 将sha属性值添加到新数组中
             $newArray.Add($sha)
           }
-          $response3 = Invoke-WebRequest -Uri https://api.github.com/repos/jxxghp/MoviePilot/git/refs/heads/v2 | ConvertFrom-Json
+          $response3 = Invoke-WebRequest -Uri https://api.github.com/repos/fortunearterial/NasPilot-Backend/git/refs/heads/v2-develope | ConvertFrom-Json
           $jxxghp_version=$response3.object.sha
           echo $jxxghp_version
           if ($newArray -contains $jxxghp_version) {
@@ -67,19 +66,17 @@ jobs:
       - name: pull exe code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PRIVATE_REPO_TOKEN }}
-          ref: v2-develope
-          repository: ${{ secrets.REPO }}
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
-          path: 'Inno-Setup-MoviePilot'
+          repository: kira-96/Inno-Setup-Chinese-Simplified-Translation
+          ref: main
+          path: 'Inno-Setup-NasPilot'
           fetch-depth: 1
 
       - name: pull server code
         uses: actions/checkout@v4
         with:
           ref: v2-develope
-          repository: fortunearterial/NasPilot-Windows
-          path: 'MoviePilot'
+          repository: fortunearterial/NasPilot-Backend
+          path: 'NasPilot'
           fetch-depth: 2
 
       - name: Init Python 3.12.8
@@ -91,10 +88,10 @@ jobs:
       - name: Install dependent packages
         id: INSTALL_PACKAGES
         run: |
-          cd MoviePilot
+          cd NasPilot
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          Remove-Item ".\config\app.env"
+          # Remove-Item ".\config\app.env"
           $hash_version=(git log -2 --pretty=format:"%h" | Select-Object -Skip 1)
           $GIT_LOG=(git log -2 --oneline | Select-Object -Last 1)
           echo $GIT_LOG
@@ -116,19 +113,19 @@ jobs:
           Remove-Item -Path "MoviePilot-Plugins-main" -Recurse -Force
           Get-ChildItem -Path . -Recurse -Filter "requirements.txt" | ForEach-Object { pip install -r $_ }
 
-      - name: Download MoviePilot Frontend
+      - name: Download NasPilot Frontend
         run: |
-          $FRONTEND_VERSION = Get-Content "./MoviePilot/version.py" | Select-String "FRONTEND_VERSION" | ForEach-Object {$_.ToString().Split('=')[1] }
-          $APP_VERSION = Get-Content "./MoviePilot/version.py" | Select-String "APP_VERSION" | ForEach-Object {$_.ToString().Split('=')[1] }
+          $FRONTEND_VERSION = Get-Content "./NasPilot/version.py" | Select-String "FRONTEND_VERSION" | ForEach-Object {$_.ToString().Split('=')[1] }
+          $APP_VERSION = Get-Content "./NasPilot/version.py" | Select-String "APP_VERSION" | ForEach-Object {$_.ToString().Split('=')[1] }
           # 去除可能存在的单双引号和前后空格
           $FRONTEND_VERSION =$FRONTEND_VERSION.Trim() -replace "'", "" -replace '"', ""
           $APP_VERSION =$APP_VERSION.Trim() -replace "'", "" -replace '"', ""
           # 输出 FRONTEND_VERSION 的值
           echo "FRONTEND_VERSION: $FRONTEND_VERSION"
           echo "APP_VERSION: $APP_VERSION"
-          mkdir MoviePilot-Frontend
-          cd MoviePilot-Frontend
-          $extract_url = "https://github.com/jxxghp/MoviePilot-Frontend/releases/download/$FRONTEND_VERSION/dist.zip"
+          mkdir NasPilot-Frontend
+          cd NasPilot-Frontend
+          $extract_url = "https://github.com/fortunearterial/NasPilot-Frontend/releases/download/$FRONTEND_VERSION/dist.zip"
           Write-Host "前端 Downloading..."
           # 下载
           Invoke-WebRequest -URI $extract_url -OutFile dist.zip
@@ -170,7 +167,7 @@ jobs:
           dir
           Invoke-WebRequest https://jrsoftware.org/download.php/is.exe?site=1 -OutFile is.exe
           Start-Process is.exe -ArgumentList "/VERYSILENT", "/NORETART", "/SP-","/SUPPRESSMSGBOXES","/DIR=C:\Users\runneradmin\AppData\Local\Temp\inno" -NoNewWindow -Wait
-          cd Inno-Setup-MoviePilot
+          cd Inno-Setup-NasPilot
           Copy-Item -Path ".\ChineseSimplified.isl" -Destination "C:\Users\runneradmin\AppData\Local\Temp\inno\Languages"
           echo $env:FIRST_VERSION
           echo $env:HASH_VERSION
