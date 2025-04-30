@@ -62,7 +62,7 @@ jobs:
         with:
           ref: main
           repository: fortunearterial/NasPilot-Windows
-          path: 'NasPilot-Agent'
+          path: 'NasPilot-Windows'
           fetch-depth: 2
 
       - name: Init Python 3.12.8
